@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import XLSX from 'xlsx';
+import CoffeeButton from './CoffeeButton';
 import './tailwind.css';
 
 function App() {
@@ -41,7 +42,8 @@ function App() {
 
   return (
     <div className="container mx-auto mt-10 ml-10">
-      <div className="mb-4">
+      <h3 className='text-3xl text-sky-500'>抽獎遊戲</h3>
+      <div className="mb-4 mt-10">
         <input type="file" onChange={handleFileUpload} />
       </div>
       <div className="flex items-center mb-4">
@@ -73,6 +75,9 @@ function App() {
           </ul>
         </div>
       )}
+      <div className="absolute bottom-0 left-0 p-4">
+        <CoffeeButton />
+      </div>
     </div>
   );
 }
