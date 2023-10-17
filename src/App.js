@@ -7,7 +7,7 @@ function App() {
   const [file, setFile] = useState(null);
   const [winners, setWinners] = useState([]);
   const [numWinners, setNumWinners] = useState(1);
-  const [showWaitting, setShowWaitting] = useState(false);
+  const [showWaiting, setShowWaiting] = useState(false);
 
   const handleFileUpload = (e) => {
     const selectedFile = e.target.files[0];
@@ -16,10 +16,10 @@ function App() {
 
   const handleDrawWinners = () => {
     setWinners([]);
-    setShowWaitting(true);
+    setShowWaiting(true);
     setTimeout(() => {
       if (file) {
-        setShowWaitting(false);
+        setShowWaiting(false);
 
         const fileReader = new FileReader();
         fileReader.onload = (e) => {
@@ -41,7 +41,7 @@ function App() {
   };
 
   return (
-    <div className="container mx-auto mt-10 ml-10">
+    <div className="relative h-screen mx-auto mt-10 ml-10">
       <h3 className='text-3xl text-sky-500'>抽獎遊戲</h3>
       <div className="mb-4 mt-10">
         <input type="file" onChange={handleFileUpload} />
@@ -62,7 +62,7 @@ function App() {
       >
         抽獎
       </button>
-      {showWaitting && <img src="./waitting.gif" alt="Loading..." />}
+      {showWaiting && <img src="./waitting.gif" alt="Loading..." />}
       {winners.length > 0 && (
         <div className="mt-4">
           <h2 className="text-xl font-bold">得獎者:</h2>
@@ -75,7 +75,7 @@ function App() {
           </ul>
         </div>
       )}
-      <div className="absolute bottom-0 left-0 p-4">
+      <div className="absolute left-0 bottom-1/4">
         <CoffeeButton />
       </div>
     </div>
