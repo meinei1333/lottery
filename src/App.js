@@ -10,41 +10,51 @@ function App() {
   const [showWaiting, setShowWaiting] = useState(false);
 
   const handleFileUpload = (e) => {
+    console.log("handleFileUpload");
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
 
   const handleDrawWinners = () => {
-    setWinners([]);
-    setShowWaiting(true);
-    setTimeout(() => {
-      if (file) {
-        setShowWaiting(false);
+    console.log("file", file);
+    if (!file) {
+      alert("請上傳Excel檔案")
+    } else {
+      setWinners([]);
+      setShowWaiting(true);
+      setTimeout(() => {
+        if (file) {
+          setShowWaiting(false);
 
-        const fileReader = new FileReader();
-        fileReader.onload = (e) => {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          const fileReader = new FileReader();
+          fileReader.onload = (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-          const shuffledData = jsonData.sort(() => 0.5 - Math.random());
-          const selectedWinners = shuffledData.slice(0, numWinners);
-          console.log("setWinners");
-          setWinners(selectedWinners);
-        };
+            const shuffledData = jsonData.sort(() => 0.5 - Math.random());
+            const selectedWinners = shuffledData.slice(0, numWinners);
+            console.log("setWinners");
+            setWinners(selectedWinners);
+          };
 
-        fileReader.readAsArrayBuffer(file);
-      }
-    }, 1000);
+          fileReader.readAsArrayBuffer(file);
+        }
+      }, 3000);
+    }
   };
+
+  const fileClick = () => {
+    setWinners([]);
+  }
 
   return (
     <div className="relative h-screen mx-auto mt-10 ml-10">
       <h3 className='text-3xl text-sky-500'>抽獎遊戲</h3>
       <div className="mb-4 mt-10">
-        <input type="file" onChange={handleFileUpload} />
+        <input type="file" onClick={fileClick} onChange={handleFileUpload} />
       </div>
       <div className="flex items-center mb-4">
         <span className="mr-2">抽</span>
