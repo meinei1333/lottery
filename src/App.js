@@ -8,22 +8,24 @@ function App() {
   const [winners, setWinners] = useState([]);
   const [numWinners, setNumWinners] = useState(1);
   const [showWaiting, setShowWaiting] = useState(false);
+  const [showFirework, setFirework] = useState(false);
+  const [firstRecord, setFirstRecord] = useState("");
 
   const handleFileUpload = (e) => {
-    console.log("handleFileUpload");
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
   };
 
   const handleDrawWinners = () => {
-    console.log("file", file);
+    setFirework(false);
     if (!file) {
-      alert("請上傳Excel檔案")
+      alert("請上傳Excel檔案");
     } else {
       setWinners([]);
       setShowWaiting(true);
       setTimeout(() => {
         if (file) {
+          setFirework(true);
           setShowWaiting(false);
 
           const fileReader = new FileReader();
@@ -33,10 +35,9 @@ function App() {
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
+            setFirstRecord(Object.keys(jsonData[0])[0]); //取得Excel第一個欄位名子
             const shuffledData = jsonData.sort(() => 0.5 - Math.random());
             const selectedWinners = shuffledData.slice(0, numWinners);
-            console.log("setWinners");
             setWinners(selectedWinners);
           };
 
@@ -48,7 +49,8 @@ function App() {
 
   const fileClick = () => {
     setWinners([]);
-  }
+    setFirework(false);
+  };
 
   return (
     <div className="relative h-screen mx-auto mt-10 ml-10">
@@ -69,9 +71,7 @@ function App() {
       <button
         onClick={handleDrawWinners}
         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-      >
-        抽獎
-      </button>
+      >抽獎</button>
       {showWaiting && <img src="./waitting.gif" alt="Loading..." />}
       {winners.length > 0 && (
         <div className="mt-4">
@@ -79,13 +79,29 @@ function App() {
           <ul>
             {winners.map((winner, index) => (
               <li key={index} className="mt-2">
-                {winner.A}
+                {winner[firstRecord]}
               </li>
             ))}
           </ul>
         </div>
       )}
+      {showFirework && (
+        <img
+          src="./firework.gif"
+          alt="Firework"
+          className="absolute top-0 left-0 w-full h-screen z-50"
+          style={{ pointerEvents: 'none' }}
+        />
+      )}
       <div className="absolute left-0 bottom-1/4">
+        <a
+          href="https://youtu.be/BdwUpUgczK4"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          影片介紹
+        </a>
         <CoffeeButton />
       </div>
     </div>
